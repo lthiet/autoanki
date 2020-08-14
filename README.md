@@ -23,4 +23,6 @@ The scope of this project limits itself to text based content. For example, we w
 - Anatomy
 - etc.
 
+At first, we will get content from verified Wikipedia articles.
+
 
