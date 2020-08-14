@@ -26,36 +26,37 @@ def get_data(export, headers, section):
         # Get the text
         text = unit.text
 
-        # Ignore sections with empty texts
         # NOTE: this is probably dirty, could use classes instead?
-        if len(text) != 0:
-            export['headers'].append(temp_header)
-            export['content'].append(unit.text)
+        export['headers'].append(temp_header)
+        export['content'].append(unit.text)
 
         get_data(export, temp_header, unit.sections)
 
 
 if __name__ == '__main__':
     # Read input
-    target = sys.argv[1]
-    page_py = wiki.page(target)
+    targets = sys.argv[1:]
 
-    # Check for page existence
-    if not page_py.exists():
-        print("ERROR: Page doesn't exist.")
-        exit(1)
+    for target in targets:
+        page_py = wiki.page(target)
 
-    # Create data
-    export = {
-        'headers': [],
-        'content': []
-    }
+        # Check for page existence
+        if not page_py.exists():
+            print(f"ERROR: Page {target} doesn't exist.")
+            exit(1)
 
-    # Fetch data
-    get_data(export, [], page_py.sections)
+        # Create data
+        export = {
+            'headers': [],
+            'content': []
+        }
 
-    # Save data
-    p = str(Path(os.getcwd()).parent.parent) + '/data/pages/'
+        # Fetch data
+        get_data(export, [], page_py.sections)
 
-    with open(p + page_py.title + '.json', 'w') as f:
-        json.dump(export, f, indent=2)
+        # Save data
+        # NOTE: this could be done a litte better
+        p = str(Path(os.getcwd()).parent.parent) + '/data/pages/raw/'
+
+        with open(p + page_py.title.replace(' ', '_') + '.json', 'w') as f:
+            json.dump(export, f, indent=2)
