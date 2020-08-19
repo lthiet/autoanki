@@ -36,10 +36,21 @@ def get_data(export, headers, section):
 if __name__ == '__main__':
     # Read input
     targets = sys.argv[1:]
-
+    
+    #Checking if directory exits and if it doesn't it creates one
+    
+    p = Path(os.getcwd()).parent.parent / 'data';
+    if not os.path.exists(p):
+        os.mkdir(p);
+    p = p / 'pages'
+    if not os.path.exists(p):
+        os.mkdir(p);
+    p = p / 'raw'
+    if not os.path.exists(p):
+        os.mkdir(p);
     for target in targets:
         page_py = wiki.page(target)
-
+        
         # Check for page existence
         if not page_py.exists():
             print(f"ERROR: Page {target} doesn't exist.")
@@ -56,7 +67,7 @@ if __name__ == '__main__':
 
         # Save data
         # NOTE: this could be done a litte better
-        p = str(Path(os.getcwd()).parent.parent) + '/data/pages/raw/'
-
-        with open(p + page_py.title.replace(' ', '_') + '.json', 'w') as f:
+        
+        
+        with open(p / (page_py.title.replace(' ', '_') + '.json'), 'w') as f:
             json.dump(export, f, indent=2)
